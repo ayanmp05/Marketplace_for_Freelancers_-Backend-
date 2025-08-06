@@ -28,7 +28,7 @@ const connect = async () => {
 };
 
 app.use(cors({
-  origin: "http://localhost:5173", // Your frontend URL
+  origin: "https://geniferr-frontend.vercel.app/", // Your frontend URL
   credentials: true, // This is the key fix!
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
