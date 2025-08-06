@@ -20,30 +20,33 @@ export const register = async (req, res, next) => {
 }
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.username })
+    const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      next(createError(404, "User not found"))
+      return next(createError(404, "User not found"));
     }
 
     const isCorrect = bcrypt.compareSync(req.body.password, user.password);
     if (!isCorrect) {
-      next(createError(404, "Wrong password or username!"))
+      return next(createError(404, "Wrong password or username!"));
     }
 
     const token = jwt.sign({
       id: user._id,
       isSeller: user.isSeller,
-    }, process.env.JWT_KEY)
+    }, process.env.JWT_KEY);
 
-    // Separating the password from object
-    const { password, ...info } = user
+    const { password, ...info } = user._doc; // Use ._doc to get a plain object
+
     res.cookie("accessToken", token, {
       httpOnly: true,
-    }).status(200).send(user)
+      secure: true,     // <-- ADD THIS
+      sameSite: "none", // <-- ADD THIS
+    }).status(200).send(info); // Send 'info' instead of 'user' to exclude the password
+
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 export const logout = async (req, res) => {
   res.clearCookie("accessToken", {
