@@ -11,12 +11,7 @@ export const register = async (req, res, next) => {
       ...req.body,
       password: hash,
     })
-    try {
-      await newUser.save();
-
-    } catch (err) {
-      console.log(err)
-    }
+    await newUser.save();
     res.status(201).send("User has been created.")
   } catch (err) {
     next(err)
