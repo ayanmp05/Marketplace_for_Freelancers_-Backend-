@@ -14,6 +14,10 @@ import cors from "cors";
 const app = express()
 dotenv.config()
 
+app.get('/', (req, res) => {
+  res.send('Welcome! The API is up and running.');
+});
+
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
